@@ -6,9 +6,8 @@ use hyper::server::conn::http1;
 use hyper::service::service_fn;
 use hyper::{Request, Response};
 use hyper_util::rt::TokioIo;
-use lazy_static::lazy_static;
 use metrics::process_metrics;
-use prometheus::{labels, opts, register_counter, Counter, Encoder, TextEncoder};
+use prometheus::{Encoder, TextEncoder};
 use status_models::Status;
 use std::convert::Infallible;
 use std::net::SocketAddr;
@@ -24,16 +23,7 @@ use tracing::{error, info};
 mod metrics;
 mod status_models;
 
-lazy_static! {
-    static ref HTTP_COUNTER: Counter = register_counter!(opts!(
-        "example_http_requests_total",
-        "Number of HTTP requests made.",
-        labels! {"handler" => "all",}
-    ))
-    .unwrap();
-}
-
-async fn hello(_: Request<impl hyper::body::Body>) -> Result<Response<Full<Bytes>>, Infallible> {
+async fn metrics(_: Request<impl hyper::body::Body>) -> Result<Response<Full<Bytes>>, Infallible> {
     let encoder = TextEncoder::new();
     let metric_families = prometheus::gather();
     let mut buffer = vec![];
@@ -50,7 +40,7 @@ async fn run_http_server(config: &CommandArgs) -> Result<(), anyhow::Error> {
         let io = TokioIo::new(tcp);
         tokio::task::spawn(async move {
             if let Err(err) = http1::Builder::new()
-                .serve_connection(io, service_fn(hello))
+                .serve_connection(io, service_fn(metrics))
                 .await
             {
                 error!("Error serving connection: {:?}", err);

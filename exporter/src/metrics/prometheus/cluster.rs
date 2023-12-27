@@ -1,5 +1,5 @@
-use crate::metrics::MetricsConvertible;
 use crate::status_models::cluster::ClusterStatus;
+use crate::{metrics::MetricsConvertible, status_models::cluster_process::ClusterClassType};
 use lazy_static::lazy_static;
 use prometheus::{register_int_gauge, IntGauge};
 
@@ -25,5 +25,20 @@ impl MetricsConvertible for ClusterStatus {
         }
 
         self.data.to_metrics(&[]);
+
+        for (process_id, process) in &self.processes {
+            let machine_id = &process.machine_id;
+            let class_type = process
+                .class_type
+                .as_ref()
+                .unwrap_or(&ClusterClassType::Unset)
+                .to_string();
+            let labels = [
+                machine_id.0.as_str(),
+                process_id.0.as_str(),
+                class_type.as_str(),
+            ];
+            process.to_metrics(&labels);
+        }
     }
 }

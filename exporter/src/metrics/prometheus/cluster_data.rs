@@ -1,5 +1,5 @@
 use crate::metrics::MetricsConvertible;
-use crate::status_models::cluster::ClusterData;
+use crate::status_models::cluster_data::ClusterData;
 use lazy_static::lazy_static;
 use prometheus::{register_int_gauge, IntGauge};
 

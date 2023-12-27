@@ -1,11 +1,18 @@
 use serde::Deserialize;
 
+/// Generally the host name, human readable name
 #[derive(Deserialize, Eq, PartialEq, Hash)]
 pub struct MachineId(pub String);
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Copy, Clone)]
 pub struct Frequency {
     pub hz: f64,
+}
+
+impl From<Frequency> for f64 {
+    fn from(value: Frequency) -> Self {
+        value.hz
+    }
 }
 
 /// jq: .cluster.machines[]
@@ -28,6 +35,7 @@ pub struct ClusterMachineMemory {
     pub total_bytes: u64,
 }
 
+/// jq: .cluster.machines[].network
 #[derive(Deserialize)]
 pub struct ClusterMachineNetwork {
     pub megabits_sent: Frequency,
