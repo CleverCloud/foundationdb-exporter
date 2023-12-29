@@ -11,7 +11,7 @@ If you need more metrics, feel free to contribute!*
 
 ```
 # Run a FoundationDB cluster with the exporter
-docker comnpose up -d
+docker compose up -d
 # Fetch metrics available from the exporter
 curl localhost:9090
 ```
