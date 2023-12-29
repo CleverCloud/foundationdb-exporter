@@ -22,7 +22,7 @@ fn run_command(cmd: &str, args: &[&str]) -> Result<Vec<u8>, anyhow::Error> {
 }
 
 pub fn fetch_cluster_status(cmd: &str, args: &[&str]) -> Result<Status, Error> {
-    let cmd = run_command(cmd, args).map_err(|e| Error::Cmd(e))?;
+    let cmd = run_command(cmd, args).map_err(Error::Cmd)?;
 
     let json_status = &mut serde_json::Deserializer::from_slice(&cmd);
     serde_path_to_error::deserialize(json_status).map_err(|e| {

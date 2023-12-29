@@ -1,0 +1,26 @@
+name-template: 'v$RESOLVED_VERSION 🦀'
+tag-template: 'v$RESOLVED_VERSION'
+exclude-labels:
+  - 'skip-changelog'
+version-resolver:
+  major:
+    labels:
+      - 'breaking-change'
+  default: patch
+categories:
+  - title: '⚠️ Breaking changes'
+    label: 'breaking-change'
+  - title: '🚀 Enhancements'
+    label: 'enhancement'
+  - title: '🐛 Bug Fixes'
+    label: 'bug'
+template: |
+  $CHANGES
+
+  Contributors: $CONTRIBUTORS! 🎉
+sort-direction: 'ascending'
+replacers:
+  - search: '/(?:and )?@dependabot-preview(?:\[bot\])?,?/g'
+    replace: ''
+  - search: '/(?:and )?@dependabot(?:\[bot\])?,?/g'
+    replace: ''

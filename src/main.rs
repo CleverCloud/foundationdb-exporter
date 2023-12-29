@@ -34,7 +34,7 @@ async fn metrics(_: Request<impl hyper::body::Body>) -> Result<Response<Full<Byt
 }
 
 async fn run_http_server(config: &CommandArgs) -> Result<(), anyhow::Error> {
-    let addr: SocketAddr = ([127, 0, 0, 1], config.port).into();
+    let addr: SocketAddr = ([0, 0, 0, 0], config.port).into();
     let listener = TcpListener::bind(addr).await?;
     info!("Listening on http://{}", addr);
     loop {

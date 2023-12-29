@@ -1,7 +1,20 @@
 # FoundationDB Metrics Exporter
 
 A tool which will poll status of your FoundationDB cluster and expose human-readable
-metrics for Prometheus.
+metrics for Prometheus. When it is useful, metrics are tagged with appropriate data
+to be easily retriveable.
+
+*Not all metrics from status are yet available, but the ones we use are available.
+If you need more metrics, feel free to contribute!*
+
+## Getting started
+
+```
+# Run a FoundationDB cluster with the exporter
+docker comnpose up -d
+# Fetch metrics available from the exporter
+curl localhost:9090
+```
 
 ## Help
 
@@ -16,6 +29,15 @@ Options:
   -d, --delay-sec <DELAY_SEC>  Delay in seconds between two update of the status & metrics [env: FDB_EXPORTER_DELAY=] [default: 5]
   -h, --help                   Print help
   -V, --version                Print version
+```
+
+## Build
+
+Rust `1.74.0` at least is required
+
+```
+cargo build --release
+./target/release/foundationdb-exporter
 ```
 
 ## Contributing a new metric

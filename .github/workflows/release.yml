@@ -1,0 +1,29 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - v[0-9]+.*
+
+jobs:
+  upload-assets:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: foundationdb-exporter
+          tar: unix
+          zip: windows
+          token: ${{ secrets.GITHUB_TOKEN }}
+          include: README.md

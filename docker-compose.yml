@@ -1,0 +1,48 @@
+version: '3'
+services:
+  # Specify three fdbserver processes.
+  fdb-coordinator:
+    image: foundationdb/foundationdb:${FDB_VERSION}
+    environment:
+      FDB_COORDINATOR: ${FDB_COORDINATOR}
+      FDB_NETWORKING_MODE: ${FDB_NETWORKING_MODE}
+      FDB_COORDINATOR_PORT: ${FDB_COORDINATOR_PORT}
+    env_file:
+      - .env
+    ports:
+      - 4500:4500/tcp
+  fdb-server-1:
+    depends_on:
+      - fdb-coordinator
+    image: foundationdb/foundationdb:${FDB_VERSION}
+    environment:
+      FDB_COORDINATOR: ${FDB_COORDINATOR}
+      FDB_NETWORKING_MODE: ${FDB_NETWORKING_MODE}
+      FDB_COORDINATOR_PORT: ${FDB_COORDINATOR_PORT}
+    env_file:
+      - .env
+  fdb-server-2:
+    depends_on:
+      - fdb-coordinator
+    image: foundationdb/foundationdb:${FDB_VERSION}
+    environment:
+      FDB_COORDINATOR: ${FDB_COORDINATOR}
+      FDB_NETWORKING_MODE: ${FDB_NETWORKING_MODE}
+      FDB_COORDINATOR_PORT: ${FDB_COORDINATOR_PORT}
+    env_file:
+      - .env
+
+  fdb-exporter:
+    depends_on:
+      - fdb-coordinator
+    restart: always
+    build: .
+    environment:
+      FDB_COORDINATOR: ${FDB_COORDINATOR}
+      FDB_NETWORKING_MODE: ${FDB_NETWORKING_MODE}
+      FDB_COORDINATOR_PORT: ${FDB_COORDINATOR_PORT}
+    env_file:
+      - .env
+    ports:
+      - 9090:9090
+
