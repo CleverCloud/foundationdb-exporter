@@ -33,7 +33,7 @@ lazy_static! {
         &["machine_id", "process_id", "class_type"],
     )
     .unwrap();
-    static ref P_PROCESS_DISK_READS_SECTORS: IntGaugeVec = register_int_gauge_vec!(
+    static ref P_PROCESS_DISK_READS_SECTORS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_disk_reads_sectors",
         "N/A",
         &["machine_id", "process_id", "class_type"],
@@ -51,7 +51,7 @@ lazy_static! {
         &["machine_id", "process_id", "class_type"],
     )
     .unwrap();
-    static ref P_PROCESS_DISK_WRITES_SECTORS: IntGaugeVec = register_int_gauge_vec!(
+    static ref P_PROCESS_DISK_WRITES_SECTORS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_disk_writes_sectors",
         "N/A",
         &["machine_id", "process_id", "class_type"],

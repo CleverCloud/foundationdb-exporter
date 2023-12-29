@@ -15,5 +15,5 @@ pub struct ClusterProcessDisk {
 pub struct ClusterProcessDiskStat {
     pub counter: i64,
     pub hz: f64,
-    pub sectors: i64,
+    pub sectors: f64,
 }

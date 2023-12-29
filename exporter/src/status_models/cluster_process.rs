@@ -68,6 +68,10 @@ pub enum ClusterClassType {
     Test,
     #[serde(rename = "storage_cache")]
     StorageCache,
+    #[serde(rename = "log")]
+    Log,
+    #[serde(rename = "cluster_controller")]
+    ClusterController,
 }
 
 impl fmt::Display for ClusterClassType {
@@ -83,6 +87,8 @@ impl fmt::Display for ClusterClassType {
             ClusterClassType::Master => write!(f, "master"),
             ClusterClassType::Test => write!(f, "test"),
             ClusterClassType::StorageCache => write!(f, "storage_cache"),
+            ClusterClassType::Log => write!(f, "log"),
+            ClusterClassType::ClusterController => write!(f, "cluster_controller"),
         }
     }
 }

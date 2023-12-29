@@ -1,25 +1,27 @@
 use bytes::Bytes;
 use clap::Parser;
+use fetcher::fetch_cluster_status;
 use futures::join;
 use http_body_util::Full;
 use hyper::server::conn::http1;
 use hyper::service::service_fn;
 use hyper::{Request, Response};
 use hyper_util::rt::TokioIo;
-use metrics::process_metrics;
+use metrics::{process_metrics, MetricsConvertible};
 use prometheus::{Encoder, TextEncoder};
-use status_models::Status;
+
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::num::ParseIntError;
 use std::path::PathBuf;
-use std::process::Command;
+
 use tokio::{
     net::TcpListener,
     time::{sleep, Duration},
 };
 use tracing::{error, info};
 
+mod fetcher;
 mod metrics;
 mod status_models;
 
@@ -59,19 +61,12 @@ async fn run_status_fetcher(config: &CommandArgs) -> Result<(), anyhow::Error> {
         // Fairly safe as we already parse it to a valid PathBuf in config
         opts.push(cluster.to_str().unwrap());
     }
+    let cmd = String::from("fdbcli");
     loop {
-        // TODO: Move me to appropriate structures
-        let output = Command::new("fdbcli")
-            .args(["--exec", "status json"])
-            .output()
-            .expect("Failed to get fdbcli");
-
-        // FIXME: Handle errors
-        let data: Status = serde_json::from_slice(&output.stdout).map_err(|e| {
-            error!("Failed to parse error {}", e);
-            e
-        })?;
-        process_metrics(data);
+        match fetch_cluster_status(&cmd, &opts) {
+            Ok(status) => process_metrics(status),
+            Err(e) => e.to_metrics(&[]),
+        }
         sleep(config.delay_sec).await;
     }
 }
