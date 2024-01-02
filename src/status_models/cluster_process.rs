@@ -7,6 +7,7 @@ use super::cluster_machine::MachineId;
 use super::cluster_process_disk::ClusterProcessDisk;
 use super::cluster_process_memory::ClusterProcessMemory;
 use super::cluster_process_network::ClusterProcessNetwork;
+use super::cluster_process_role::ClusterProcessRole;
 
 /// A hash corresponding to the process
 #[derive(Deserialize, PartialEq, Eq, Hash)]
@@ -28,6 +29,7 @@ pub struct ClusterProcess {
     pub uptime_seconds: f64,
     pub cpu: Option<ClusterProcessCpu>,
     pub disk: Option<ClusterProcessDisk>,
+    pub roles: Vec<ClusterProcessRole>,
 }
 
 /// jq: .cluster.processes[].cpu

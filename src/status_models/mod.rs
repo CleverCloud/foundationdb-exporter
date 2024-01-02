@@ -9,6 +9,8 @@ pub mod cluster_process;
 pub mod cluster_process_disk;
 pub mod cluster_process_memory;
 pub mod cluster_process_network;
+pub mod cluster_process_role;
+pub mod cluster_qos;
 
 #[derive(Deserialize)]
 pub struct Status {

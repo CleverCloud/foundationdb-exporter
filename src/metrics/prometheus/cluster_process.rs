@@ -61,5 +61,9 @@ impl MetricsConvertible for ClusterProcess {
         if let Some(memory) = &self.memory {
             memory.to_metrics(labels);
         }
+
+        for role in &self.roles {
+            role.to_metrics(labels);
+        }
     }
 }
