@@ -39,20 +39,31 @@ lazy_static! {
 
 impl MetricsConvertible for ClusterProcessMemory {
     fn to_metrics(&self, labels: &[&str]) {
-        P_PROCESS_MEMORY_AVAILABLE_BYTES
-            .with_label_values(labels)
-            .set(self.available_bytes);
-        P_PROCESS_MEMORY_LIMIT_BYTES
-            .with_label_values(labels)
-            .set(self.limit_bytes);
-        P_PROCESS_MEMORY_RSS_BYTES
-            .with_label_values(labels)
-            .set(self.rss_bytes);
-        P_PROCESS_MEMORY_UNUSED_BYTES
-            .with_label_values(labels)
-            .set(self.unused_allocated_memory);
-        P_PROCESS_MEMORY_USED_BYTES
-            .with_label_values(labels)
-            .set(self.used_bytes);
+        if let Some(available_bytes) = self.available_bytes {
+            P_PROCESS_MEMORY_AVAILABLE_BYTES
+                .with_label_values(labels)
+                .set(available_bytes);
+        }
+        if let Some(limit_bytes) = self.limit_bytes {
+            P_PROCESS_MEMORY_LIMIT_BYTES
+                .with_label_values(labels)
+                .set(limit_bytes);
+        }
+        if let Some(rss_bytes) = self.rss_bytes {
+            P_PROCESS_MEMORY_RSS_BYTES
+                .with_label_values(labels)
+                .set(rss_bytes);
+        }
+
+        if let Some(unused_allocated_memory) = self.unused_allocated_memory {
+            P_PROCESS_MEMORY_UNUSED_BYTES
+                .with_label_values(labels)
+                .set(unused_allocated_memory);
+        }
+        if let Some(used_bytes) = self.used_bytes {
+            P_PROCESS_MEMORY_USED_BYTES
+                .with_label_values(labels)
+                .set(used_bytes);
+        }
     }
 }

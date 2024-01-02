@@ -13,23 +13,36 @@ pub struct ClusterData {
     pub state: ClusterDataState,
 }
 
+// jq: .cluster.data.state.name
+#[derive(Deserialize, Copy, Clone)]
+pub enum ClusterDataStateName {
+    #[serde(rename = "initializing")]
+    Initializing,
+    #[serde(rename = "missing_data")]
+    MissingData,
+    #[serde(rename = "healing")]
+    Healing,
+    #[serde(rename = "optimizing_team_collections")]
+    OptimizingTeamCollections,
+    #[serde(rename = "healthy_populating_region")]
+    HealthyPopulatingRegion,
+    #[serde(rename = "healthy_repartitioning")]
+    HealthyRepartitioning,
+    #[serde(rename = "healthy_removing_server")]
+    HealthyRemovingServer,
+    #[serde(rename = "healthy_rebalancing")]
+    HealthyRebalacing,
+    #[serde(rename = "healthy")]
+    Healthy,
+}
+
 /// jq: .cluster.data.state
 #[derive(Deserialize)]
 pub struct ClusterDataState {
     pub healthy: bool,
     pub description: Option<String>,
     pub min_replicas_remaining: i64,
-    // available values:
-    // "initializing",
-    // "missing_data",
-    // "healing",
-    // "optimizing_team_collections",
-    // "healthy_populating_region",
-    // "healthy_repartitioning",
-    // "healthy_removing_server",
-    // "healthy_rebalancing",
-    // "healthy"
-    pub name: String,
+    pub name: ClusterDataStateName,
 }
 
 /// jq: .cluster.data.moving_data

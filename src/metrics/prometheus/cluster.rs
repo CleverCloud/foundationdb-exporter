@@ -40,5 +40,9 @@ impl MetricsConvertible for ClusterStatus {
             ];
             process.to_metrics(&labels);
         }
+
+        if let Some(latency_probe) = &self.latency_probe {
+            latency_probe.to_metrics(&[]);
+        }
     }
 }
