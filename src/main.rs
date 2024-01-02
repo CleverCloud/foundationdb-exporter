@@ -110,3 +110,20 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use crate::CommandArgs;
+
+    impl Default for CommandArgs {
+        fn default() -> Self {
+            CommandArgs {
+                port: 9090,
+                cluster: None,
+                delay_sec: Duration::from_secs(1),
+            }
+        }
+    }
+}

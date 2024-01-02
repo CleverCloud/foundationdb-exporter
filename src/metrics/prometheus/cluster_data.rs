@@ -36,6 +36,18 @@ lazy_static! {
         "Whether the cluster is healthy or not"
     )
     .unwrap();
+    static ref P_CLUSTER_STATE_CURRENT: IntGauge = register_int_gauge!(
+        "fdb_cluster_state",
+        "Current state of the cluster (see src/status_models/cluster_data.rs)"
+    )
+    .unwrap();
+    static ref P_CLUSTER_MOVING_DATA_IN_FLIGHT_BYTES: IntGauge =
+        register_int_gauge!("fdb_cluster_moving_data_in_flight_bytes", "Data in flight",).unwrap();
+    static ref P_CLUSTER_MOVING_DATA_IN_QUEUE_BYTES: IntGauge = register_int_gauge!(
+        "fdb_cluster_moving_data_in_queue_bytes",
+        "Data waiting to be transferred"
+    )
+    .unwrap();
 }
 
 impl MetricsConvertible for ClusterData {
@@ -49,5 +61,10 @@ impl MetricsConvertible for ClusterData {
             .set(self.least_operating_space_bytes_log_server);
         P_CLUSTER_AVG_PARTITION_BYTES_GAUGE.set(self.average_partition_size_bytes);
         P_CLUSTER_STATE_HEALTHY.set(self.state.healthy as i64);
+        P_CLUSTER_STATE_CURRENT.set(self.state.name as i64);
+        if let Some(moving_data) = &self.moving_data {
+            P_CLUSTER_MOVING_DATA_IN_FLIGHT_BYTES.set(moving_data.in_flight_bytes);
+            P_CLUSTER_MOVING_DATA_IN_QUEUE_BYTES.set(moving_data.in_queue_bytes);
+        }
     }
 }
