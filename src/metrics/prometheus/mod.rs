@@ -13,6 +13,7 @@ pub mod cluster_process;
 pub mod cluster_process_disk;
 pub mod cluster_process_memory;
 pub mod cluster_process_network;
+pub mod cluster_process_role;
 
 lazy_static! {
     static ref P_FDB_EXPORTER_PARSING_ERROR: IntCounterVec = register_int_counter_vec! {

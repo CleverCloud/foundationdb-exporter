@@ -9,6 +9,8 @@ lazy_static! {
         "Number of machines available in the cluster"
     )
     .unwrap();
+    static ref P_CLUSTER_GENERATION_COUNT: IntGauge =
+        register_int_gauge!("fdb_cluster_generation_count", "Number of generations").unwrap();
 }
 
 impl MetricsConvertible for ClusterStatus {
@@ -44,5 +46,7 @@ impl MetricsConvertible for ClusterStatus {
         if let Some(latency_probe) = &self.latency_probe {
             latency_probe.to_metrics(&[]);
         }
+
+        P_CLUSTER_GENERATION_COUNT.set(self.generation);
     }
 }

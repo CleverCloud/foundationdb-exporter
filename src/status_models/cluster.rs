@@ -16,4 +16,5 @@ pub struct ClusterStatus {
     pub data: ClusterData,
     pub processes: HashMap<ProcessId, ClusterProcess>,
     pub latency_probe: Option<ClusterLatencyProbe>,
+    pub generation: i64,
 }

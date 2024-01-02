@@ -27,6 +27,13 @@ lazy_static! {
         "Number of messages available when fetching status",
     )
     .unwrap();
+    static ref P_CLIENT_DATABASE_AVAILABLE: IntGauge = register_int_gauge!(
+        "fdb_database_available (0=unavailable)",
+        "Database can receive request"
+    )
+    .unwrap();
+    static ref P_CLIENT_DATABASE_HEALTHY: IntGauge =
+        register_int_gauge!("fdb_database_healthy (0=unhealthy)", "Database healthiness").unwrap();
 }
 
 impl MetricsConvertible for ClientStatus {
@@ -48,5 +55,8 @@ impl MetricsConvertible for ClientStatus {
         P_CLIENT_QUORUM_REACHABLE.set(self.coordinators.quorum_reachable as i64);
 
         P_CLIENT_MESSAGES_COUNT.set(self.messages.len() as i64);
+
+        P_CLIENT_DATABASE_HEALTHY.set(self.database_status.healthy as i64);
+        P_CLIENT_DATABASE_AVAILABLE.set(self.database_status.available as i64);
     }
 }
