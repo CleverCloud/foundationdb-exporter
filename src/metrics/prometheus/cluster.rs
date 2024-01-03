@@ -48,5 +48,7 @@ impl MetricsConvertible for ClusterStatus {
         }
 
         P_CLUSTER_GENERATION_COUNT.set(self.generation);
+
+        self.qos.to_metrics(&[]);
     }
 }
