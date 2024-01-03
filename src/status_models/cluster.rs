@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 use super::cluster_probe::ClusterLatencyProbe;
 use super::cluster_process::{ClusterProcess, ProcessId};
+use super::cluster_qos::ClusterQos;
 
 /// jq: .cluster
 #[derive(Deserialize)]
@@ -17,4 +18,5 @@ pub struct ClusterStatus {
     pub processes: HashMap<ProcessId, ClusterProcess>,
     pub latency_probe: Option<ClusterLatencyProbe>,
     pub generation: i64,
+    pub qos: ClusterQos,
 }
