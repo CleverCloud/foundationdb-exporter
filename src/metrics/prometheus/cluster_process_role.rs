@@ -9,6 +9,24 @@ use crate::{
 };
 
 lazy_static! {
+    // KvStore
+    static ref P_KVSTORE_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
+        "fdb_cluster_process_role_kvstore_used_bytes",
+        "KVStore used bytes",
+        &["machine_id", "process_id", "class_type"],
+    ).unwrap();
+
+    static ref P_KVSTORE_AVAILABLE_BYTES: IntGaugeVec = register_int_gauge_vec!(
+        "fdb_cluster_process_role_kvstore_available_bytes",
+        "KVStore available bytes",
+        &["machine_id", "process_id", "class_type"],
+    ).unwrap();
+
+    static ref P_KVSTORE_FREE_BYTES: IntGaugeVec = register_int_gauge_vec!(
+        "fdb_cluster_process_role_kvstore_free_bytes",
+        "KVStore free bytes",
+        &["machine_id", "process_id", "class_type"],
+    ).unwrap();
     // Queue related
     static ref P_QUEUE_DISK_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_used_bytes",
@@ -35,13 +53,13 @@ lazy_static! {
     ).unwrap();
 
     // Lag related
-    static ref P_DATA_LAG_SECONDS: IntGaugeVec = register_int_gauge_vec!(
+    static ref P_DATA_LAG_SECONDS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_role_data_lag_seconds",
         "Lag in seconds of the process role",
         &["machine_id", "process_id", "class_type"],
     ).unwrap();
 
-    static ref P_DATA_DURABLE_LAG_SECONDS: IntGaugeVec = register_int_gauge_vec!(
+    static ref P_DATA_DURABLE_LAG_SECONDS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_role_durable_lag_seconds",
         "Lag in seconds of data being durable of the process role",
         &["machine_id", "process_id", "class_type"],
@@ -98,6 +116,22 @@ fn set_latency_stats(metrics: &HashMap<String, GaugeVec>, labels: &[&str], stats
 
 impl MetricsConvertible for ClusterProcessRole {
     fn to_metrics(&self, labels: &[&str]) {
+        // Kv store related
+        if let Some(used_bytes) = self.kvstore_used_bytes {
+            P_KVSTORE_USED_BYTES
+                .with_label_values(labels)
+                .set(used_bytes)
+        }
+        if let Some(available_bytes) = self.kvstore_available_bytes {
+            P_KVSTORE_AVAILABLE_BYTES
+                .with_label_values(labels)
+                .set(available_bytes)
+        }
+        if let Some(free_bytes) = self.kvstore_free_bytes {
+            P_KVSTORE_FREE_BYTES
+                .with_label_values(labels)
+                .set(free_bytes)
+        }
         // Queue related
         if let Some(used_bytes) = self.queue_disk_used_bytes {
             P_QUEUE_DISK_USED_BYTES

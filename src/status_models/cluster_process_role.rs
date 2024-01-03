@@ -75,7 +75,7 @@ pub struct LatencyStats {
 
 #[derive(Deserialize)]
 pub struct DataLag {
-    pub seconds: i64,
+    pub seconds: f64,
     pub versions: i64,
 }
 
@@ -83,5 +83,5 @@ pub struct DataLag {
 pub struct ClusterProcessRoleFreq {
     pub counter: i64,
     pub hz: f64,
-    pub sectors: f64,
+    pub roughness: f64,
 }
