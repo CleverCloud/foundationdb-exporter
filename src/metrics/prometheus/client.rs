@@ -28,12 +28,12 @@ lazy_static! {
     )
     .unwrap();
     static ref P_CLIENT_DATABASE_AVAILABLE: IntGauge = register_int_gauge!(
-        "fdb_database_available (0=unavailable)",
-        "Database can receive request"
+        "fdb_database_available",
+        "Database can receive request (0=unavailable)"
     )
     .unwrap();
     static ref P_CLIENT_DATABASE_HEALTHY: IntGauge =
-        register_int_gauge!("fdb_database_healthy (0=unhealthy)", "Database healthiness").unwrap();
+        register_int_gauge!("fdb_database_healthy", "Database healthiness (0=unhealthy)").unwrap();
 }
 
 impl MetricsConvertible for ClientStatus {

@@ -16,10 +16,9 @@ pub mod cluster_process_network;
 pub mod cluster_process_role;
 
 lazy_static! {
-    static ref P_FDB_EXPORTER_PARSING_ERROR: IntCounterVec = register_int_counter_vec! {
+    static ref P_FDB_EXPORTER_PARSING_ERROR: IntCounter = register_int_counter! {
         "fdb_exporter_parsing_error_count",
         "Number of parsing errors encountered",
-        &["json_path"]
     }
     .unwrap();
     static ref P_FDB_EXPORTER_CMD_ERROR: IntCounter = register_int_counter!(
@@ -35,9 +34,7 @@ impl MetricsConvertible for FetcherError {
             FetcherError::Cmd(_) => P_FDB_EXPORTER_CMD_ERROR.inc(),
             FetcherError::Parsing(e) => {
                 let path = e.path().to_string();
-                P_FDB_EXPORTER_PARSING_ERROR
-                    .with_label_values(&[path.as_str()])
-                    .inc();
+                P_FDB_EXPORTER_PARSING_ERROR.inc();
             }
         };
     }
