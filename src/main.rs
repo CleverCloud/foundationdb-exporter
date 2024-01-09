@@ -84,7 +84,7 @@ struct CommandArgs {
     cluster: Option<PathBuf>,
 
     /// Delay in seconds between two update of the status & metrics
-    #[arg(short, long, env = "FDB_EXPORTER_DELAY", value_parser = parse_duration, default_value = "5")]
+    #[arg(short, long, env = "FDB_EXPORTER_DELAY", value_parser = parse_duration, default_value = "15")]
     delay_sec: Duration,
 }
 

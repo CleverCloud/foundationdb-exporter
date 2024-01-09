@@ -34,14 +34,23 @@ pub enum ClusterDataStateName {
     HealthyRebalacing,
     #[serde(rename = "healthy")]
     Healthy,
+    #[serde(rename = "unknown")]
+    Unknown,
+}
+
+impl Default for ClusterDataStateName {
+    fn default() -> Self {
+        Self::Unknown
+    }
 }
 
 /// jq: .cluster.data.state
 #[derive(Deserialize)]
 pub struct ClusterDataState {
-    pub healthy: bool,
+    pub healthy: Option<bool>,
     pub description: Option<String>,
-    pub min_replicas_remaining: i64,
+    pub min_replicas_remaining: Option<i64>,
+    #[serde(default)]
     pub name: ClusterDataStateName,
 }
 
