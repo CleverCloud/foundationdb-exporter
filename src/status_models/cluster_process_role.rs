@@ -2,12 +2,14 @@ use serde::Deserialize;
 
 use super::cluster_process::ClusterClassType;
 
+#[derive(Deserialize)]
+pub struct RoleId(pub String);
+
 // jq: .cluster.processes[].roles[]
 #[derive(Deserialize)]
 pub struct ClusterProcessRole {
     pub query_queue_max: Option<f64>,
     pub local_rate: Option<f64>,
-    pub input_bytes: Option<ClusterProcessRoleFreq>,
     pub stored_bytes: Option<i64>,
 
     pub kvstore_used_bytes: Option<i64>,
@@ -17,8 +19,6 @@ pub struct ClusterProcessRole {
     pub kvstore_total_size: Option<i64>,
     pub kvstore_total_nodes: Option<i64>,
     pub kvstore_inline_keys: Option<i64>,
-
-    pub durable_bytes: Option<ClusterProcessRoleFreq>,
 
     pub queue_disk_used_bytes: Option<i64>,
     pub queue_disk_available_bytes: Option<i64>,
@@ -33,7 +33,10 @@ pub struct ClusterProcessRole {
     pub data_lag: Option<DataLag>,
     pub durability_lag: Option<DataLag>,
 
-    pub id: Option<String>,
+    pub id: Option<RoleId>,
+
+    pub durable_bytes: Option<ClusterProcessRoleFreq>,
+    pub input_bytes: Option<ClusterProcessRoleFreq>,
 
     pub total_queries: Option<ClusterProcessRoleFreq>,
     pub finished_queries: Option<ClusterProcessRoleFreq>,
