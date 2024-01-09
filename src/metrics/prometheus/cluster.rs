@@ -29,7 +29,10 @@ impl MetricsConvertible for ClusterStatus {
         self.data.to_metrics(&[]);
 
         for (process_id, process) in &self.processes {
-            let machine_id = &process.machine_id;
+            let machine_id = match &process.machine_id {
+                Some(id) => id,
+                None => continue,
+            };
             let class_type = process
                 .class_type
                 .as_ref()
