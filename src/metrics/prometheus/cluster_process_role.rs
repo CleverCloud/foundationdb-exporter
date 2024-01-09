@@ -4,9 +4,13 @@ use lazy_static::lazy_static;
 use prometheus::{register_gauge_vec, register_int_gauge_vec, GaugeVec, IntGaugeVec};
 
 use crate::{
-    metrics::MetricsConvertible,
-    status_models::cluster_process_role::{ClusterProcessRole, LatencyStats},
+    metrics::{prometheus::AndSet, MetricsConvertible},
+    status_models::cluster_process_role::{
+        ClusterProcessRole, ClusterProcessRoleFreq, LatencyStats,
+    },
 };
+
+use super::StaticMetric;
 
 lazy_static! {
     // KvStore
@@ -28,6 +32,11 @@ lazy_static! {
         &["machine_id", "process_id", "class_type"],
     ).unwrap();
     // Queue related
+    static ref P_QUERY_QUEUE_MAX: GaugeVec = register_gauge_vec!(
+        "fdb_cluster_process_role_queue_max",
+        "Queue of read queries",
+        &["machine_id", "process_id", "class_type"],
+    ).unwrap();
     static ref P_QUEUE_DISK_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_used_bytes",
         "Used bytes in the queue of a process",
@@ -65,52 +74,101 @@ lazy_static! {
         &["machine_id", "process_id", "class_type"],
     ).unwrap();
 
-    static ref P_DATA_READ_LATENCY: HashMap<String, GaugeVec> = generate_latency_stats("fdb_cluster_process_role_read_latency", "Latency of read");
-    static ref P_DATA_COMMIT_LATENCY: HashMap<String, GaugeVec> = generate_latency_stats("fdb_cluster_process_role_commit_latency", "Latency to commit");
-    static ref P_DATA_COMMIT_BATCHING_WINDOW_SIZE: HashMap<String, GaugeVec> = generate_latency_stats("fdb_cluster_process_role_commit_batching_window", "Commit batching window size latency ");
+    // Latency related
+    static ref P_DATA_READ_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_read_latency", "Latency of read");
+    static ref P_DATA_COMMIT_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_commit_latency", "Latency to commit");
+    static ref P_DATA_COMMIT_BATCHING_WINDOW_SIZE: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_commit_batching_window", "Commit batching window size latency ");
+
+    // Frequencies related
+    static ref P_DATA_FREQ_TOTAL_QUERIES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_total_queries", "Total number of queries");
+    static ref P_DATA_FREQ_FINISHED_QUERIES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_finished_queries", "Number of finished queries");
+    static ref P_DATA_FREQ_LOW_PRIORITY_QUERIES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_low_priority_queries", "Number of low prio queries");
+    static ref P_DATA_FREQ_BYTES_QUERIED: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_bytes_queried", "Frequency of write storage server operations in bytes");
+    static ref P_DATA_FREQ_KEYS_QUERIED: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_keys_queried", "Frequency of read storage server operations in bytes");
+    static ref P_DATA_FREQ_MUTATION_BYTES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_mutation_bytes", "Frequency of mutations in bytes");
+    static ref P_DATA_FREQ_MUTATION: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_mutation", "Frequency of mutation");
+    static ref P_DATA_FREQ_FETCHED_VERSIONS: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_fetched_versions", "Frequency of fetched versions in control plane");
+    static ref P_DATA_FREQ_FETCHES_FROM_LOG: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_fetches_from_log", "Frequency of fetched data from T logs");
+    static ref P_DATA_FREQ_INPUT_BYTES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_input_bytes", "Storage and Log Input Rates");
+    static ref P_DATA_FREQ_DURABLE_BYTES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_durable_bytes", "Storage and Log input rates durable");
 }
 
-fn generate_latency_stats(prefix: &str, desc: &str) -> HashMap<String, GaugeVec> {
-    let stat_name = &[
-        "count", "min", "max", "median", "mean", "p25", "p90", "p95", "p99", "p99_9",
-    ];
-    let mut metrics = HashMap::new();
-    for name in stat_name {
-        metrics.insert(
-            name.to_string(),
-            register_gauge_vec!(
-                format!("{}_{}", prefix, name),
-                desc,
-                &["machine_id", "process_id", "class_type"],
-            )
-            .unwrap(),
-        );
+impl StaticMetric<GaugeVec> for ClusterProcessRoleFreq {
+    fn register(prefix: &str, desc: &str) -> HashMap<String, GaugeVec> {
+        let stat_name = &["counter", "hz", "roughness"];
+        let mut metrics = HashMap::new();
+        for name in stat_name {
+            metrics.insert(
+                name.to_string(),
+                register_gauge_vec!(
+                    format!("{}_{}", prefix, name),
+                    desc,
+                    &["machine_id", "process_id", "class_type"]
+                )
+                .unwrap(),
+            );
+        }
+        metrics
     }
-    metrics
+    fn set(&self, metric: &HashMap<String, GaugeVec>, labels: &[&str]) {
+        let stat_name = &["counter", "hz", "roughness"];
+        for name in *stat_name {
+            // Safe as we know already the stat names
+            let metric = metric.get(name).unwrap();
+            let value: f64 = match name {
+                "counter" => self.counter as f64,
+                "hz" => self.hz,
+                "roughness" => self.roughness,
+                // Impossible case
+                &_ => -1.0,
+            };
+            metric.with_label_values(labels).set(value);
+        }
+    }
 }
 
-fn set_latency_stats(metrics: &HashMap<String, GaugeVec>, labels: &[&str], stats: &LatencyStats) {
-    let stat_name = &[
-        "count", "min", "max", "median", "mean", "p25", "p90", "p95", "p99", "p99_9",
-    ];
-    for name in *stat_name {
-        // Safe as we know already the stat names
-        let metric = metrics.get(name).unwrap();
-        let value: f64 = match name {
-            "count" => stats.count,
-            "min" => stats.min,
-            "max" => stats.max,
-            "median" => stats.median,
-            "mean" => stats.mean,
-            "p25" => stats.p25,
-            "p90" => stats.p90,
-            "p95" => stats.p95,
-            "p99" => stats.p99,
-            "p99_9" => stats.p99_9,
-            // Impossible case
-            &_ => -1.0,
-        };
-        metric.with_label_values(labels).set(value);
+impl StaticMetric<GaugeVec> for LatencyStats {
+    fn register(prefix: &str, desc: &str) -> HashMap<String, GaugeVec> {
+        let stat_name = &[
+            "count", "min", "max", "median", "mean", "p25", "p90", "p95", "p99", "p99_9",
+        ];
+        let mut metrics = HashMap::new();
+        for name in stat_name {
+            metrics.insert(
+                name.to_string(),
+                register_gauge_vec!(
+                    format!("{}_{}", prefix, name),
+                    desc,
+                    &["machine_id", "process_id", "class_type"],
+                )
+                .unwrap(),
+            );
+        }
+        metrics
+    }
+    fn set(&self, metrics: &HashMap<String, GaugeVec>, labels: &[&str]) {
+        let stat_name = &[
+            "count", "min", "max", "median", "mean", "p25", "p90", "p95", "p99", "p99_9",
+        ];
+        for name in *stat_name {
+            // Safe as we know already the stat names
+            let metric = metrics.get(name).unwrap();
+            let value: f64 = match name {
+                "count" => self.count,
+                "min" => self.min,
+                "max" => self.max,
+                "median" => self.median,
+                "mean" => self.mean,
+                "p25" => self.p25,
+                "p90" => self.p90,
+                "p95" => self.p95,
+                "p99" => self.p99,
+                "p99_9" => self.p99_9,
+                // Impossible case
+                &_ => -1.0,
+            };
+            metric.with_label_values(labels).set(value);
+        }
     }
 }
 
@@ -133,6 +191,9 @@ impl MetricsConvertible for ClusterProcessRole {
                 .set(free_bytes)
         }
         // Queue related
+        if let Some(queue_max) = self.query_queue_max {
+            P_QUERY_QUEUE_MAX.with_label_values(labels).set(queue_max);
+        }
         if let Some(used_bytes) = self.queue_disk_used_bytes {
             P_QUEUE_DISK_USED_BYTES
                 .with_label_values(labels)
@@ -167,18 +228,35 @@ impl MetricsConvertible for ClusterProcessRole {
         }
 
         // Latency stats
-        if let Some(read_latency) = &self.read_latency_statistics {
-            set_latency_stats(&P_DATA_READ_LATENCY, labels, read_latency);
-        }
-        if let Some(commit_latency) = &self.commit_latency_statistics {
-            set_latency_stats(&P_DATA_COMMIT_LATENCY, labels, commit_latency);
-        }
-        if let Some(commit_batching_window) = &self.commit_batching_window_size {
-            set_latency_stats(
-                &P_DATA_COMMIT_BATCHING_WINDOW_SIZE,
-                labels,
-                commit_batching_window,
-            );
-        }
+        self.read_latency_statistics
+            .and_set_with_labels(&P_DATA_READ_LATENCY, labels);
+        self.commit_latency_statistics
+            .and_set_with_labels(&P_DATA_COMMIT_LATENCY, labels);
+        self.commit_batching_window_size
+            .and_set_with_labels(&P_DATA_COMMIT_BATCHING_WINDOW_SIZE, labels);
+
+        // Frequencies related
+        self.total_queries
+            .and_set_with_labels(&P_DATA_FREQ_TOTAL_QUERIES, labels);
+        self.finished_queries
+            .and_set_with_labels(&P_DATA_FREQ_FINISHED_QUERIES, labels);
+        self.low_priority_queries
+            .and_set_with_labels(&P_DATA_FREQ_LOW_PRIORITY_QUERIES, labels);
+        self.bytes_queried
+            .and_set_with_labels(&P_DATA_FREQ_BYTES_QUERIED, labels);
+        self.keys_queried
+            .and_set_with_labels(&P_DATA_FREQ_KEYS_QUERIED, labels);
+        self.mutation_bytes
+            .and_set_with_labels(&P_DATA_FREQ_MUTATION_BYTES, labels);
+        self.mutations
+            .and_set_with_labels(&P_DATA_FREQ_MUTATION, labels);
+        self.fetched_versions
+            .and_set_with_labels(&P_DATA_FREQ_FETCHED_VERSIONS, labels);
+        self.fetches_from_logs
+            .and_set_with_labels(&P_DATA_FREQ_FETCHES_FROM_LOG, labels);
+        self.input_bytes
+            .and_set_with_labels(&P_DATA_FREQ_INPUT_BYTES, labels);
+        self.durable_bytes
+            .and_set_with_labels(&P_DATA_FREQ_DURABLE_BYTES, labels);
     }
 }
