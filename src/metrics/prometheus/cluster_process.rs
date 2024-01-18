@@ -31,12 +31,15 @@ lazy_static! {
 
 impl MetricsConvertible for ClusterProcess {
     fn to_metrics(&self, labels: &[&str]) {
-        P_PROCESS_UPTIME
-            .with_label_values(labels)
-            .set(self.uptime_seconds);
-        P_PROCESS_RUN_LOOP_BUSY
-            .with_label_values(labels)
-            .set(self.run_loop_busy);
+        if let Some(uptime) = self.uptime_seconds {
+            P_PROCESS_UPTIME.with_label_values(labels).set(uptime);
+        }
+
+        if let Some(run_loop_busy) = self.run_loop_busy {
+            P_PROCESS_RUN_LOOP_BUSY
+                .with_label_values(labels)
+                .set(run_loop_busy);
+        }
 
         if let Some(excluded) = self.excluded {
             P_PROCESS_EXCLUDED

@@ -4,6 +4,8 @@ A tool which will poll status of your FoundationDB cluster and expose human-read
 metrics for Prometheus. When it is useful, metrics are tagged with appropriate data
 to be easily retriveable.
 
+Metrics this exporter exposes are available in **[METRICS.md](./METRICS.md)**.
+
 *Not all metrics from status are yet available, but the ones we use are available.
 If you need more metrics, feel free to contribute!*
 
@@ -26,7 +28,7 @@ Usage: foundationdb-exporter [OPTIONS]
 Options:
   -p, --port <PORT>            Listening port of the web server [env: FDB_EXPORTER_PORT=] [default: 9090]
   -c, --cluster <CLUSTER>      Location of fdb.cluster file [env: FDB_CLUSTER_FILE=]
-  -d, --delay-sec <DELAY_SEC>  Delay in seconds between two update of the status & metrics [env: FDB_EXPORTER_DELAY=] [default: 5]
+  -d, --delay-sec <DELAY_SEC>  Delay in seconds between two update of the status & metrics [env: FDB_EXPORTER_DELAY=] [default: 15]
   -h, --help                   Print help
   -V, --version                Print version
 ```
