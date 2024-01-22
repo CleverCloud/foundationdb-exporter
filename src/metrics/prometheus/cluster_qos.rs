@@ -1,11 +1,11 @@
 use lazy_static::lazy_static;
 use prometheus::{
-    register_gauge, register_gauge_vec, register_int_gauge, Gauge, GaugeVec, IntGauge,
+    register_gauge, register_int_gauge, Gauge, IntGauge,
 };
 use std::collections::HashMap;
 
 use crate::{
-    metrics::MetricsConvertible,
+    metrics::{MetricsConvertible},
     status_models::{cluster_process_role::DataLag, cluster_qos::ClusterQos},
 };
 
@@ -17,19 +17,19 @@ lazy_static! {
         "Queue of the storage server limiting the system"
     )
     .unwrap();
-    static ref P_LIMITING_DATA_STORAGE: HashMap<String, GaugeVec> = DataLag::register(
+    static ref P_LIMITING_DATA_STORAGE: HashMap<String, Gauge> = DataLag::register(
         "fdb_qos_limiting_data_lag_storage_server",
         "Lag of the limiting storage server"
     );
-    static ref P_LIMITING_DURABILITY_LAG_STORAGE: HashMap<String, GaugeVec> = DataLag::register(
+    static ref P_LIMITING_DURABILITY_LAG_STORAGE: HashMap<String, Gauge> = DataLag::register(
         "fdb_qos_limiting_durability_lag_storage_server",
         "Durability lag of the limiting storage server"
     );
-    static ref P_WORST_DATA_LAG_STORAGE_SERVER: HashMap<String, GaugeVec> = DataLag::register(
+    static ref P_WORST_DATA_LAG_STORAGE_SERVER: HashMap<String, Gauge> = DataLag::register(
         "fdb_qos_worst_data_lag_storage_server",
         "Storage server with the worst queue"
     );
-    static ref P_WORST_DURABILITY_LAG_STORAGE_SERVER: HashMap<String, GaugeVec> = DataLag::register(
+    static ref P_WORST_DURABILITY_LAG_STORAGE_SERVER: HashMap<String, Gauge> = DataLag::register(
         "fdb_qos_worst_durability_lag_storage_server",
         "Storage server with the worst durability queue"
     );
@@ -82,24 +82,19 @@ impl MetricsConvertible for ClusterQos {
     }
 }
 
-impl StaticMetric<GaugeVec> for DataLag {
-    fn register(prefix: &str, desc: &str) -> HashMap<String, GaugeVec> {
+impl StaticMetric<Gauge> for DataLag {
+    fn register(prefix: &str, desc: &str) -> HashMap<String, Gauge> {
         let stat_name = &["versions", "seconds"];
         let mut metrics = HashMap::new();
         for name in stat_name {
             metrics.insert(
                 name.to_string(),
-                register_gauge_vec!(
-                    format!("{}_{}", prefix, name),
-                    desc,
-                    &["machine_id", "process_id", "class_type"],
-                )
-                .unwrap(),
+                register_gauge!(format!("{}_{}", prefix, name), desc,).unwrap(),
             );
         }
         metrics
     }
-    fn set(&self, metrics: &HashMap<String, GaugeVec>, labels: &[&str]) {
+    fn set(&self, metrics: &HashMap<String, Gauge>, _: &[&str]) {
         let stat_name = &["versions", "seconds"];
         for name in *stat_name {
             // Safe as we know already the stat names
@@ -110,7 +105,7 @@ impl StaticMetric<GaugeVec> for DataLag {
                 // Impossible case
                 &_ => -1.0,
             };
-            metric.with_label_values(labels).set(value);
+            metric.set(value);
         }
     }
 }

@@ -42,6 +42,7 @@ impl MetricsConvertible for ClusterStatus {
                 machine_id.0.as_str(),
                 process_id.0.as_str(),
                 class_type.as_str(),
+                &process.address.to_string(),
             ];
             process.to_metrics(&labels);
         }

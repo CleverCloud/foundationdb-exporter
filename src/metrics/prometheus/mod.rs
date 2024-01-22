@@ -17,6 +17,8 @@ pub mod cluster_process_network;
 pub mod cluster_process_role;
 pub mod cluster_qos;
 
+pub const PROCESS_LABELS: &[&str] = &["machine_id", "process_id", "class_type", "address"];
+
 lazy_static! {
     static ref P_FDB_EXPORTER_PARSING_ERROR: IntCounter = register_int_counter! {
         "fdb_exporter_parsing_error_count",

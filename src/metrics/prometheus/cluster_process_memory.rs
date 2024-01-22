@@ -1,3 +1,4 @@
+use crate::metrics::prometheus::PROCESS_LABELS;
 use crate::{
     metrics::MetricsConvertible, status_models::cluster_process_memory::ClusterProcessMemory,
 };
@@ -8,31 +9,31 @@ lazy_static! {
     static ref P_PROCESS_MEMORY_AVAILABLE_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_memory_available_bytes",
         "Available bytes for the current process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_MEMORY_LIMIT_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_memory_limit_bytes",
         "Limiting bytes for the current process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_MEMORY_RSS_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_memory_rss_bytes",
         "N/A",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_MEMORY_UNUSED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_memory_unused_allocated_bytes",
         "N/A",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_MEMORY_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_memory_used_bytes",
         "N/A",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
 }

@@ -1,3 +1,4 @@
+use super::PROCESS_LABELS;
 use crate::{
     metrics::MetricsConvertible, status_models::cluster_process_network::ClusterProcessNetwork,
 };
@@ -8,31 +9,31 @@ lazy_static! {
     static ref P_PROCESS_NETWORK_CONN_ERRORS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_network_connection_errors_freq",
         "Frequency of connection errors",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_NETWORK_CONN_CLOSED: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_network_connections_closed",
         "Frequency of connection closed",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_NETWORK_CONN_ESTABLISHED: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_network_connections_established",
         "Frequency of connection established",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_NETWORK_MEGABITS_RECEIVED: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_network_received_megabits",
         "Megabits received on network",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
     static ref P_PROCESS_NETWORK_MEGABITS_SENT: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_network_sent_megabits",
         "Megabits sent on network",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     )
     .unwrap();
 }
