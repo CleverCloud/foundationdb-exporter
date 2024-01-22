@@ -123,12 +123,12 @@
 | `fdb_cluster_process_role_total_queries_hz` | Total number of queries | `address, class_type, machine_id, process_id` | GAUGE |
 | `fdb_cluster_process_role_total_queries_roughness` | Total number of queries | `address, class_type, machine_id, process_id` | GAUGE |
 | `fdb_cluster_process_uptime` | Uptime of the process | `address, class_type, machine_id, process_id` | GAUGE |
+| `fdb_cluster_processes_roles` | Current number of process running a specific role | `role` | GAUGE |
 | `fdb_cluster_state` | Current state of the cluster (see src/status_models/cluster_data.rs) | `` | GAUGE |
 | `fdb_cluster_total_disk_used_bytes` | Total number of bytes used on all disk | `` | GAUGE |
 | `fdb_cluster_total_kv_size_bytes` | Total number of bytes for all key values | `` | GAUGE |
 | `fdb_database_available` | Database can receive request (0=unavailable) | `` | GAUGE |
 | `fdb_database_healthy` | Database healthiness (0=unhealthy) | `` | GAUGE |
-| `fdb_exporter_parsing_error_count` | Number of parsing errors encountered | `` | COUNTER |
 | `fdb_qos_batch_transactions_per_second_limit` | Number of batch transactions the cluster allows per second | `` | GAUGE |
 | `fdb_qos_limiting_data_lag_storage_server_seconds` | Lag of the limiting storage server | `` | GAUGE |
 | `fdb_qos_limiting_data_lag_storage_server_versions` | Lag of the limiting storage server | `` | GAUGE |
