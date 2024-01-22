@@ -48,7 +48,7 @@ pub enum ClusterClassSource {
     SetClass,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Eq, Hash, PartialEq, Clone, Copy)]
 pub enum ClusterClassType {
     #[serde(rename = "unset")]
     Unset,
