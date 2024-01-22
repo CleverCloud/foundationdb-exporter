@@ -1,11 +1,9 @@
 use lazy_static::lazy_static;
-use prometheus::{
-    register_gauge, register_int_gauge, Gauge, IntGauge,
-};
+use prometheus::{register_gauge, register_int_gauge, Gauge, IntGauge};
 use std::collections::HashMap;
 
 use crate::{
-    metrics::{MetricsConvertible},
+    metrics::MetricsConvertible,
     status_models::{cluster_process_role::DataLag, cluster_qos::ClusterQos},
 };
 

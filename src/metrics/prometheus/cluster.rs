@@ -22,7 +22,11 @@ impl MetricsConvertible for ClusterStatus {
                 .datacenter_id
                 .clone()
                 .unwrap_or(String::from("default"));
-            let labels = [machine_id.0.as_str(), datacenter_id.as_str()];
+            let labels = [
+                machine_id.0.as_str(),
+                datacenter_id.as_str(),
+                machine.address.as_str(),
+            ];
             machine.to_metrics(&labels);
         }
 
