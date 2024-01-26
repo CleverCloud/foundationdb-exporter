@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 /// jq: .cluster.data
 #[derive(Deserialize)]
+#[cfg_attr(test, derive(Default))]
 pub struct ClusterData {
     pub average_partition_size_bytes: i64,
     pub least_operating_space_bytes_log_server: i64,
@@ -46,6 +47,7 @@ impl Default for ClusterDataStateName {
 
 /// jq: .cluster.data.state
 #[derive(Deserialize)]
+#[cfg_attr(test, derive(Default))]
 pub struct ClusterDataState {
     pub healthy: Option<bool>,
     pub description: Option<String>,

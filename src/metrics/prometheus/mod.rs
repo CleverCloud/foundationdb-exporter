@@ -17,44 +17,7 @@ pub mod cluster_process_network;
 pub mod cluster_process_role;
 pub mod cluster_qos;
 
-#[macro_export]
-macro_rules! register_data_lag {
-    ($prefix:expr, $desc:expr, $labels: expr) => {{
-        let mut metrics: HashMap<String, GaugeVec> = HashMap::new();
-        for key_name in ["versions", "seconds"] {
-            let metric = register_gauge_vec!(
-                format!("{}_{}", $prefix, key_name),
-                format!("{} ({})", $desc, key_name),
-                $labels
-            )
-            .unwrap();
-
-            metrics.insert(String::from(key_name), metric);
-        }
-        metrics
-    }};
-
-    ($prefix:expr, $desc:expr) => {
-        register_data_lag!($prefix, $desc, &[])
-    };
-}
-
-#[macro_export]
-macro_rules! set_data_lag {
-    ($key:ident, $data_lag:ident, $labels:expr) => {
-        $key.get("versions")
-            .unwrap()
-            .with_label_values($labels)
-            .set($data_lag.versions as f64);
-        $key.get("seconds")
-            .unwrap()
-            .with_label_values($labels)
-            .set($data_lag.seconds);
-    };
-    ($key:ident, $data_lag:ident) => {
-        set_data_lag!($key, $data_lag, &[]);
-    };
-}
+pub const PROCESS_LABELS: &[&str] = &["machine_id", "process_id", "class_type", "address"];
 
 lazy_static! {
     static ref P_FDB_EXPORTER_PARSING_ERROR: IntCounter = register_int_counter! {

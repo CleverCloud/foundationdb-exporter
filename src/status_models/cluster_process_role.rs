@@ -7,6 +7,7 @@ pub struct RoleId(pub String);
 
 // jq: .cluster.processes[].roles[]
 #[derive(Deserialize)]
+#[cfg_attr(test, derive(Default))]
 pub struct ClusterProcessRole {
     pub query_queue_max: Option<f64>,
     pub local_rate: Option<f64>,

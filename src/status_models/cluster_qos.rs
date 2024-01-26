@@ -4,6 +4,7 @@ use super::{cluster_process::ProcessId, cluster_process_role::DataLag};
 
 /// jq: .cluster.qos
 #[derive(Deserialize)]
+#[cfg_attr(test, derive(Default))]
 pub struct ClusterQos {
     pub worst_queue_bytes_log_server: i64,
     pub worst_queue_bytes_storage_server: i64,
@@ -24,6 +25,7 @@ pub struct ClusterQos {
 }
 
 #[derive(Deserialize)]
+#[cfg_attr(test, derive(Default))]
 pub struct ClusterPerformanceLimit {
     pub reason_server_id: Option<ProcessId>,
     pub reason_id: i64,

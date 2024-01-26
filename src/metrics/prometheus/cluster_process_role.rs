@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use lazy_static::lazy_static;
 use prometheus::{register_gauge_vec, register_int_gauge_vec, GaugeVec, IntGaugeVec};
 
+use crate::metrics::prometheus::PROCESS_LABELS;
 use crate::{
     metrics::{prometheus::AndSet, MetricsConvertible},
     status_models::cluster_process_role::{
@@ -17,61 +18,61 @@ lazy_static! {
     static ref P_KVSTORE_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_kvstore_used_bytes",
         "KVStore used bytes",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_KVSTORE_AVAILABLE_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_kvstore_available_bytes",
         "KVStore available bytes",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_KVSTORE_FREE_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_kvstore_free_bytes",
         "KVStore free bytes",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
     // Queue related
     static ref P_QUERY_QUEUE_MAX: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_role_queue_max",
         "Queue of read queries",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
     static ref P_QUEUE_DISK_USED_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_used_bytes",
         "Used bytes in the queue of a process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_QUEUE_DISK_AVAILABLE_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_available_bytes",
         "Available bytes in the queue of a process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_QUEUE_DISK_FREE_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_free_bytes",
         "Free bytes in the queue of a process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_QUEUE_DISK_TOTAL_BYTES: IntGaugeVec = register_int_gauge_vec!(
         "fdb_cluster_process_role_queue_disk_total_bytes",
         "Total bytes in the queue of a process",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     // Lag related
     static ref P_DATA_LAG_SECONDS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_role_data_lag_seconds",
         "Lag in seconds of the process role",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     static ref P_DATA_DURABLE_LAG_SECONDS: GaugeVec = register_gauge_vec!(
         "fdb_cluster_process_role_durable_lag_seconds",
         "Lag in seconds of data being durable of the process role",
-        &["machine_id", "process_id", "class_type"],
+        PROCESS_LABELS,
     ).unwrap();
 
     // Latency related
@@ -100,12 +101,7 @@ impl StaticMetric<GaugeVec> for ClusterProcessRoleFreq {
         for name in stat_name {
             metrics.insert(
                 name.to_string(),
-                register_gauge_vec!(
-                    format!("{}_{}", prefix, name),
-                    desc,
-                    &["machine_id", "process_id", "class_type"]
-                )
-                .unwrap(),
+                register_gauge_vec!(format!("{}_{}", prefix, name), desc, PROCESS_LABELS).unwrap(),
             );
         }
         metrics
@@ -136,12 +132,7 @@ impl StaticMetric<GaugeVec> for LatencyStats {
         for name in stat_name {
             metrics.insert(
                 name.to_string(),
-                register_gauge_vec!(
-                    format!("{}_{}", prefix, name),
-                    desc,
-                    &["machine_id", "process_id", "class_type"],
-                )
-                .unwrap(),
+                register_gauge_vec!(format!("{}_{}", prefix, name), desc, PROCESS_LABELS,).unwrap(),
             );
         }
         metrics

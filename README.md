@@ -42,15 +42,7 @@ cargo build --release
 ./target/release/foundationdb-exporter
 ```
 
-## Contributing a new metric
+## Contributing
 
-We want to have a symetric structure between `status_models` and `prometheus` exporter
-files. A trait is available for new structs: `MetricsConvertible`. When using it,
-you should ensure its method `to_metric()` is called by its upper struct in models.
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-1. Ensure the metric is not yet available by exploring `src/metrics/prometheus/`
-2. Check the status key is available in models `src/status_models`, if not, add
-   necessary structs for it
-3. Implemenent `MetricsConvertible` (`src/metrics/mod.rs`) on the new struct, or
-   update existin.
-4. Ensure `to_metrics()` method is called on your new implementation
