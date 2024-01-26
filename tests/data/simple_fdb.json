@@ -278,7 +278,31 @@
             "transaction_start_seconds" : 0.00016260099999999998
         },
         "layers" : {
-            "_valid" : true
+            "_valid" : true,
+            "backup" : {
+                "blob_recent_io" : {
+                    "bytes_per_second" : 14.007004649961775,
+                    "bytes_sent" : 575,
+                    "requests_failed" : 1,
+                    "requests_successful" : 1
+                },
+                "instances_running" : 35,
+                "last_updated" : 1706261240.4662604,
+                "paused" : false,
+                "tags" : {
+                    "some_backup" : {
+                        "current_status" : "has been started",
+                        "last_restorable_seconds_behind" : 3764817.37000,
+                        "last_restorable_version" : 625199400000,
+                        "mutation_log_bytes_written" : 258850000,
+                        "mutation_stream_id" : "65169e2c9fc8ff314448f8d3dd723eff",
+                        "range_bytes_written" : 354979600000,
+                        "running_backup" : true,
+                        "running_backup_is_restorable" : false
+                    }
+                }
+            }
+
         },
         "logs" : [
             {

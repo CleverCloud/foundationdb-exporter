@@ -1,5 +1,5 @@
 use lazy_static::lazy_static;
-use prometheus::{register_int_counter, IntCounter};
+use prometheus::{register_int_counter, Gauge, IntCounter, IntGauge};
 use std::collections::HashMap;
 
 use super::MetricsConvertible;
@@ -7,6 +7,7 @@ use crate::fetcher::Error as FetcherError;
 
 pub mod client;
 pub mod cluster;
+pub mod cluster_backup;
 pub mod cluster_data;
 pub mod cluster_machines;
 pub mod cluster_probe;
@@ -53,8 +54,24 @@ pub trait StaticMetric<T> {
 }
 
 pub trait AndSet<T> {
+    /// Borrow [Self] to update a HashMap of metrics
     fn and_set(&self, metric: &HashMap<String, T>);
+    /// Borrow [Self] to update a HashMap of metrics where each
+    /// metric will have specific labels
     fn and_set_with_labels(&self, metric: &HashMap<String, T>, labels: &[&str]);
+}
+
+pub trait AndSetSingle<T> {
+    /// Borrow [Self] and update metric [T]
+    fn and_set(&self, metric: &T);
+}
+
+impl AndSetSingle<IntGauge> for Option<i64> {
+    fn and_set(&self, metric: &IntGauge) {
+        if let Some(item) = self {
+            metric.set(*item);
+        }
+    }
 }
 
 impl<M, T> AndSet<T> for Option<M>

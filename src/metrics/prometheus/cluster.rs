@@ -67,6 +67,10 @@ impl MetricsConvertible for ClusterStatus {
             latency_probe.to_metrics(&[]);
         }
 
+        if let Some(backup) = &self.layers.backup {
+            backup.to_metrics(&[]);
+        }
+
         P_CLUSTER_GENERATION_COUNT.set(self.generation);
 
         self.qos.to_metrics(&[]);

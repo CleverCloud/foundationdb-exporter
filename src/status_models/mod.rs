@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 pub mod client;
 pub mod cluster;
+pub mod cluster_backup;
 pub mod cluster_data;
 pub mod cluster_machine;
 pub mod cluster_probe;
