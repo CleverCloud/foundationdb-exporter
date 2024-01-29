@@ -99,6 +99,12 @@ mod tests {
                 latency_probe: None,
                 generation: 1,
                 qos: ClusterQos::default(),
+                layers: super::ClusterStatusLayers {
+                    valid: true,
+                    error: None,
+                    backup: None,
+                },
+                storage_wiggler: None,
             }
         }
     }
