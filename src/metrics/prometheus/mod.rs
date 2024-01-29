@@ -1,5 +1,5 @@
 use lazy_static::lazy_static;
-use prometheus::{register_int_counter, Gauge, IntCounter, IntGauge};
+use prometheus::{register_int_counter, IntCounter, IntGauge};
 use std::collections::HashMap;
 
 use super::MetricsConvertible;
@@ -17,6 +17,7 @@ pub mod cluster_process_memory;
 pub mod cluster_process_network;
 pub mod cluster_process_role;
 pub mod cluster_qos;
+pub mod cluster_wiggle;
 
 pub const PROCESS_LABELS: &[&str] = &["machine_id", "process_id", "class_type", "address"];
 

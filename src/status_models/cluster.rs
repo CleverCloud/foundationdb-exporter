@@ -7,6 +7,7 @@ use super::cluster_backup::ClusterBackup;
 use super::cluster_probe::ClusterLatencyProbe;
 use super::cluster_process::{ClusterClassType, ClusterProcess, ProcessId};
 use super::cluster_qos::ClusterQos;
+use super::cluster_wiggle::ClusterStorageWiggle;
 
 /// jq: .cluster
 #[derive(Deserialize)]
@@ -20,6 +21,7 @@ pub struct ClusterStatus {
     pub latency_probe: Option<ClusterLatencyProbe>,
     pub generation: i64,
     pub qos: ClusterQos,
+    pub storage_wiggler: Option<ClusterStorageWiggle>,
     pub layers: ClusterStatusLayers,
 }
 

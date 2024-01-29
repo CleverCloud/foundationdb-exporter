@@ -71,6 +71,10 @@ impl MetricsConvertible for ClusterStatus {
             backup.to_metrics(&[]);
         }
 
+        if let Some(wiggle) = &self.storage_wiggler {
+            wiggle.to_metrics(&[]);
+        }
+
         P_CLUSTER_GENERATION_COUNT.set(self.generation);
 
         self.qos.to_metrics(&[]);

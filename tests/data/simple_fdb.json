@@ -220,6 +220,28 @@
             "tenant_mode" : "disabled",
             "usable_regions" : 1
         },
+        "storage_wiggler" : {
+            "primary" : {
+                "finished_round" : 0,
+                "finished_wiggle" : 0,
+                "last_round_finish_datetime" : "1970-01-01 00:00:00.000 +0000",
+                "last_round_finish_timestamp" : 0,
+                "last_round_start_datetime" : "2024-01-29 13:56:29.522 +0000",
+                "last_round_start_timestamp" : 1706536589.5227642,
+                "last_wiggle_finish_datetime" : "1970-01-01 00:00:00.000 +0000",
+                "last_wiggle_finish_timestamp" : 0,
+                "last_wiggle_start_datetime" : "2024-01-29 13:56:29.522 +0000",
+                "last_wiggle_start_timestamp" : 1706536589.5227642,
+                "smoothed_round_seconds" : 0,
+                "smoothed_wiggle_seconds" : 0
+            },
+            "wiggle_server_addresses" : [
+                "10.0.3.19:4502"
+            ],
+            "wiggle_server_ids" : [
+                "7e0744fdb4f0d950"
+            ]
+        },
         "connection_string" : "docker:docker@172.19.0.2:4500",
         "data" : {
             "average_partition_size_bytes" : 20000000,

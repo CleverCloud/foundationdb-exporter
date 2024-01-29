@@ -2,8 +2,7 @@ use std::collections::HashMap;
 
 use lazy_static::lazy_static;
 use prometheus::{
-    register_gauge, register_gauge_vec, register_int_gauge, register_int_gauge_vec, Gauge,
-    GaugeVec, IntGauge, IntGaugeVec,
+    register_gauge, register_int_gauge, register_int_gauge_vec, Gauge, IntGauge, IntGaugeVec,
 };
 
 use crate::{
