@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use prometheus::{register_gauge, register_int_gauge, Gauge, IntGauge};
 use std::collections::HashMap;
+use tracing::warn;
 
 use crate::{
     metrics::MetricsConvertible,
@@ -101,7 +102,10 @@ impl StaticMetric<Gauge> for DataLag {
                 "versions" => self.versions as f64,
                 "seconds" => self.seconds,
                 // Impossible case
-                &_ => -1.0,
+                &_ => {
+                    warn!("DataLag::set() went through irregular case for {}", name);
+                    -1.0
+                }
             };
             metric.set(value);
         }

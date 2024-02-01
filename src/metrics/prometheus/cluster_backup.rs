@@ -4,6 +4,7 @@ use lazy_static::lazy_static;
 use prometheus::{
     register_gauge, register_int_gauge, register_int_gauge_vec, Gauge, IntGauge, IntGaugeVec,
 };
+use tracing::warn;
 
 use crate::{
     metrics::MetricsConvertible,
@@ -117,7 +118,13 @@ impl StaticMetric<IntGaugeVec> for ClusterBackupTag {
                 "range_bytes_written" => self.range_bytes_written,
                 "mutation_log_written_bytes" => self.mutation_log_bytes_written,
                 // Impossible case
-                &_ => -1,
+                &_ => {
+                    warn!(
+                        "ClusterBackupTag::set() went through irregular case for {}",
+                        name
+                    );
+                    -1
+                }
             };
             metric.with_label_values(labels).set(value);
         }

@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use lazy_static::lazy_static;
 use prometheus::{register_gauge_vec, register_int_gauge_vec, GaugeVec, IntGaugeVec};
+use tracing::warn;
 
 use crate::metrics::prometheus::PROCESS_LABELS;
 use crate::{
@@ -116,7 +117,13 @@ impl StaticMetric<GaugeVec> for ClusterProcessRoleFreq {
                 "hz" => self.hz,
                 "roughness" => self.roughness,
                 // Impossible case
-                &_ => -1.0,
+                &_ => {
+                    warn!(
+                        "ClusterProcessRoleFreq::set() went through irregular case for {}",
+                        name
+                    );
+                    -1.0
+                }
             };
             metric.with_label_values(labels).set(value);
         }
@@ -156,7 +163,13 @@ impl StaticMetric<GaugeVec> for LatencyStats {
                 "p99" => self.p99,
                 "p99_9" => self.p99_9,
                 // Impossible case
-                &_ => -1.0,
+                &_ => {
+                    warn!(
+                        "LatencyStats::set() went through irregular case for {}",
+                        name
+                    );
+                    -1.0
+                }
             };
             metric.with_label_values(labels).set(value);
         }
