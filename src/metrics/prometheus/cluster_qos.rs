@@ -98,16 +98,19 @@ impl StaticMetric<Gauge> for DataLag {
         for name in *stat_name {
             // Safe as we know already the stat names
             let metric = metrics.get(name).unwrap();
-            let value: f64 = match name {
-                "versions" => self.versions as f64,
-                "seconds" => self.seconds,
+            let value: Option<f64> = match name {
+                "versions" => Some(self.versions as f64),
+                "seconds" => Some(self.seconds),
                 // Impossible case
                 &_ => {
                     warn!("DataLag::set() went through irregular case for {}", name);
-                    -1.0
+                    None
                 }
             };
-            metric.set(value);
+
+            if let Some(value_f64) = value {
+                metric.set(value_f64);
+            }
         }
     }
 }

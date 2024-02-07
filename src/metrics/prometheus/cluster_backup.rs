@@ -108,25 +108,28 @@ impl StaticMetric<IntGaugeVec> for ClusterBackupTag {
         for name in *stat_name {
             // Safe as we know already the stat names
             let metric = metrics.get(name).unwrap();
-            let value: i64 = match name {
+            let value: Option<i64> = match name {
                 "last_restorable_behind_seconds" => {
-                    self.last_restorable_seconds_behind.ceil() as i64
+                    Some(self.last_restorable_seconds_behind.ceil() as i64)
                 }
-                "last_restorable_version" => self.last_restorable_version,
-                "running_backup" => self.running_backup as i64,
-                "running_backup_restorable" => self.running_backup_is_restorable as i64,
-                "range_bytes_written" => self.range_bytes_written,
-                "mutation_log_written_bytes" => self.mutation_log_bytes_written,
+                "last_restorable_version" => Some(self.last_restorable_version),
+                "running_backup" => Some(self.running_backup as i64),
+                "running_backup_restorable" => Some(self.running_backup_is_restorable as i64),
+                "range_bytes_written" => Some(self.range_bytes_written),
+                "mutation_log_written_bytes" => Some(self.mutation_log_bytes_written),
                 // Impossible case
                 &_ => {
                     warn!(
                         "ClusterBackupTag::set() went through irregular case for {}",
                         name
                     );
-                    -1
+                    None
                 }
             };
-            metric.with_label_values(labels).set(value);
+
+            if let Some(value_i64) = value {
+                metric.with_label_values(labels).set(value_i64);
+            }
         }
     }
 }

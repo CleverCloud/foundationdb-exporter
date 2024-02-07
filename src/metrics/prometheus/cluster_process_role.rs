@@ -112,20 +112,23 @@ impl StaticMetric<GaugeVec> for ClusterProcessRoleFreq {
         for name in *stat_name {
             // Safe as we know already the stat names
             let metric = metric.get(name).unwrap();
-            let value: f64 = match name {
-                "counter" => self.counter as f64,
-                "hz" => self.hz,
-                "roughness" => self.roughness,
+            let value: Option<f64> = match name {
+                "counter" => Some(self.counter as f64),
+                "hz" => Some(self.hz),
+                "roughness" => Some(self.roughness),
                 // Impossible case
                 &_ => {
                     warn!(
                         "ClusterProcessRoleFreq::set() went through irregular case for {}",
                         name
                     );
-                    -1.0
+                    None
                 }
             };
-            metric.with_label_values(labels).set(value);
+
+            if let Some(value_f64) = value {
+                metric.with_label_values(labels).set(value_f64);
+            }
         }
     }
 }
@@ -151,27 +154,30 @@ impl StaticMetric<GaugeVec> for LatencyStats {
         for name in *stat_name {
             // Safe as we know already the stat names
             let metric = metrics.get(name).unwrap();
-            let value: f64 = match name {
-                "count" => self.count,
-                "min" => self.min,
-                "max" => self.max,
-                "median" => self.median,
-                "mean" => self.mean,
-                "p25" => self.p25,
-                "p90" => self.p90,
-                "p95" => self.p95,
-                "p99" => self.p99,
-                "p99_9" => self.p99_9,
+            let value: Option<f64> = match name {
+                "count" => Some(self.count),
+                "min" => Some(self.min),
+                "max" => Some(self.max),
+                "median" => Some(self.median),
+                "mean" => Some(self.mean),
+                "p25" => Some(self.p25),
+                "p90" => Some(self.p90),
+                "p95" => Some(self.p95),
+                "p99" => Some(self.p99),
+                "p99_9" => Some(self.p99_9),
                 // Impossible case
                 &_ => {
                     warn!(
                         "LatencyStats::set() went through irregular case for {}",
                         name
                     );
-                    -1.0
+                    None
                 }
             };
-            metric.with_label_values(labels).set(value);
+
+            if let Some(value_f64) = value {
+                metric.with_label_values(labels).set(value_f64);
+            }
         }
     }
 }
