@@ -3,9 +3,11 @@ use crate::status_models::cluster_machine::{ClusterMachine, MachineId};
 use serde::Deserialize;
 use std::collections::HashMap;
 
+use super::cluster_backup::ClusterBackup;
 use super::cluster_probe::ClusterLatencyProbe;
 use super::cluster_process::{ClusterClassType, ClusterProcess, ProcessId};
 use super::cluster_qos::ClusterQos;
+use super::cluster_wiggle::ClusterStorageWiggle;
 
 /// jq: .cluster
 #[derive(Deserialize)]
@@ -19,6 +21,18 @@ pub struct ClusterStatus {
     pub latency_probe: Option<ClusterLatencyProbe>,
     pub generation: i64,
     pub qos: ClusterQos,
+    pub storage_wiggler: Option<ClusterStorageWiggle>,
+    pub layers: ClusterStatusLayers,
+}
+
+/// jq: .cluster.layers
+#[derive(Deserialize)]
+pub struct ClusterStatusLayers {
+    #[serde(rename = "_valid")]
+    pub valid: bool,
+    pub error: Option<String>,
+
+    pub backup: Option<ClusterBackup>,
 }
 
 impl ClusterStatus {
@@ -85,6 +99,12 @@ mod tests {
                 latency_probe: None,
                 generation: 1,
                 qos: ClusterQos::default(),
+                layers: super::ClusterStatusLayers {
+                    valid: true,
+                    error: None,
+                    backup: None,
+                },
+                storage_wiggler: None,
             }
         }
     }

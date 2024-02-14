@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 pub mod client;
 pub mod cluster;
+pub mod cluster_backup;
 pub mod cluster_data;
 pub mod cluster_machine;
 pub mod cluster_probe;
@@ -11,6 +12,7 @@ pub mod cluster_process_memory;
 pub mod cluster_process_network;
 pub mod cluster_process_role;
 pub mod cluster_qos;
+pub mod cluster_wiggle;
 
 #[derive(Deserialize)]
 pub struct Status {
