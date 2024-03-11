@@ -67,11 +67,11 @@ impl MetricsConvertible for ClusterStoragePrimaryWiggle {
         P_CLUSTER_WIGGLE_FINISHED_ROUNDS_COUNT.set(self.finished_round as i64);
         P_CLUSTER_WIGGLE_FINISHED_COUNT.set(self.finished_wiggle as i64);
 
-        P_CLUSTER_WIGGLE_SMOOTHED_ROUND_SECONDS.set(self.smoothed_round_seconds);
-        P_CLUSTER_WIGGLE_SMOOTHED_SECONDS.set(self.smoothed_wiggle_seconds);
+        P_CLUSTER_WIGGLE_SMOOTHED_ROUND_SECONDS.set(self.smoothed_round_seconds.floor() as i64);
+        P_CLUSTER_WIGGLE_SMOOTHED_SECONDS.set(self.smoothed_wiggle_seconds.floor() as i64);
 
-        P_CLUSTER_WIGGLE_LAST_ROUND_FINISH.set(self.last_round_finish_timestamp);
-        P_CLUSTER_WIGGLE_LAST_FINISH.set(self.last_wiggle_finish_timestamp);
+        P_CLUSTER_WIGGLE_LAST_ROUND_FINISH.set(self.last_round_finish_timestamp.floor() as i64);
+        P_CLUSTER_WIGGLE_LAST_FINISH.set(self.last_wiggle_finish_timestamp.floor() as i64);
 
         P_CLUSTER_WIGGLE_LAST_ROUND_START.set(self.last_round_start_timestamp.floor() as i64);
         P_CLUSTER_WIGGLE_LAST_START.set(self.last_wiggle_start_timestamp.floor() as i64);
