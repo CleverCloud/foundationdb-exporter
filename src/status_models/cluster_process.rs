@@ -60,6 +60,8 @@ pub enum ClusterClassType {
     Resolution,
     #[serde(rename = "stateless")]
     Stateless,
+    #[serde(rename = "consistency_scan")]
+    ConsistencyScan,
     #[serde(rename = "commit_proxy")]
     CommitProxy,
     #[serde(rename = "grv_proxy")]
@@ -92,6 +94,7 @@ impl fmt::Display for ClusterClassType {
             ClusterClassType::Transaction => write!(f, "transaction"),
             ClusterClassType::Resolution => write!(f, "resolution"),
             ClusterClassType::Stateless => write!(f, "stateless"),
+            ClusterClassType::ConsistencyScan => write!(f, "consistency_scan"),
             ClusterClassType::CommitProxy => write!(f, "commit_proxy"),
             ClusterClassType::GrvProxy => write!(f, "grv_proxy"),
             ClusterClassType::Master => write!(f, "master"),
