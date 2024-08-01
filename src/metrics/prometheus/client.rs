@@ -48,7 +48,7 @@ impl MetricsConvertible for ClientStatus {
         for coordinator in &self.coordinators.coordinators {
             let addr = coordinator.address.to_string();
             P_CLIENT_COORDINATOR_REACHABLE
-                .with_label_values(&[&addr.as_str()])
+                .with_label_values(&[(addr.as_str())])
                 .set(coordinator.reachable as i64);
         }
 
