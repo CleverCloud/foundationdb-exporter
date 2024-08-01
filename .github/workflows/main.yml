@@ -1,6 +1,8 @@
 on: [push, pull_request]
 
 name: Continuous integration
+env:
+  RUSTFLAGS: "-A unused"
 
 jobs:
   check:
