@@ -19,8 +19,8 @@ jobs:
       - name: Fetch latest releases
         id: fdb-versions
         run: |
-          export LATEST_7_3_VERSION=$(gh release list -R apple/foundationdb --json name,tagName --exclude-drafts -q "[.[] | select(.name | startswith(\"Release 7.3\"))][0].tagName")
-          export LATEST_7_1_VERSION=$(gh release list -R apple/foundationdb --json name,tagName --exclude-drafts -q "[.[] | select(.name | startswith(\"Release 7.1\"))][0].tagName")
+          export LATEST_7_3_VERSION=$(gh release list -R apple/foundationdb --exclude-pre-releases --json name,tagName --exclude-drafts -q "[.[] | select(.name | startswith(\"Release 7.3\"))][0].tagName")
+          export LATEST_7_1_VERSION=$(gh release list -R apple/foundationdb --exclude-pre-releases --json name,tagName --exclude-drafts -q "[.[] | select(.name | startswith(\"Release 7.1\"))][0].tagName")
           echo "LATEST_7_3_VERSION=${LATEST_7_3_VERSION}" >> "${GITHUB_OUTPUT}"
           echo "LATEST_7_1_VERSION=${LATEST_7_1_VERSION}" >> "${GITHUB_OUTPUT}"
 
@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
