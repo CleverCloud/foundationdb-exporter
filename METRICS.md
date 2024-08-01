@@ -85,16 +85,36 @@
 | `fdb_cluster_process_role_commit_batching_window_p95` | Commit batching window size latency  | `["address","class_type","machine_id","process_id"]` | GAUGE |
 | `fdb_cluster_process_role_commit_batching_window_p99` | Commit batching window size latency  | `["address","class_type","machine_id","process_id"]` | GAUGE |
 | `fdb_cluster_process_role_commit_batching_window_p99_9` | Commit batching window size latency  | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_count` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_max` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_mean` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_median` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_min` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_p25` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_p90` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_p95` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_p99` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
-| `fdb_cluster_process_role_commit_latency_p99_9` | Latency to commit | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_count` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_max` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_mean` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_median` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_min` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_p25` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_p90` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_p95` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_p99` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_latency_p99_9` | GRV proxies latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_count` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_max` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_mean` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_median` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_min` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_p25` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_p90` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_p95` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_p99` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_grv_proxy_batching_p99_9` | GRV proxies commit batching latency | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_count` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_max` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_mean` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_median` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_min` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_p25` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_p90` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_p95` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_p99` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
+| `fdb_cluster_process_role_commit_latency_p99_9` | Latency for proxies | `["address","class_type","machine_id","process_id"]` | GAUGE |
 | `fdb_cluster_process_role_data_lag_seconds` | Lag in seconds of the process role | `["address","class_type","machine_id","process_id"]` | GAUGE |
 | `fdb_cluster_process_role_durable_bytes_counter` | Storage and Log input rates durable | `["address","class_type","machine_id","process_id"]` | GAUGE |
 | `fdb_cluster_process_role_durable_bytes_hz` | Storage and Log input rates durable | `["address","class_type","machine_id","process_id"]` | GAUGE |

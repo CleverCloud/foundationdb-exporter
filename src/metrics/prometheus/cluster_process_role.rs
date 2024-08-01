@@ -78,8 +78,10 @@ lazy_static! {
 
     // Latency related
     static ref P_DATA_READ_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_read_latency", "Latency of read");
-    static ref P_DATA_COMMIT_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_commit_latency", "Latency to commit");
+    static ref P_DATA_COMMIT_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_commit_latency", "Latency for proxies");
     static ref P_DATA_COMMIT_BATCHING_WINDOW_SIZE: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_commit_batching_window", "Commit batching window size latency ");
+    static ref P_DATA_GRV_PROXY_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_grv_proxy_latency", "GRV proxies latency");
+    static ref P_DATA_GRV_PROXY_BATCHING_LATENCY: HashMap<String, GaugeVec> = LatencyStats::register("fdb_cluster_process_role_grv_proxy_batching", "GRV proxies commit batching latency");
 
     // Frequencies related
     static ref P_DATA_FREQ_TOTAL_QUERIES: HashMap<String, GaugeVec> = ClusterProcessRoleFreq::register("fdb_cluster_process_role_total_queries", "Total number of queries");
@@ -237,11 +239,21 @@ impl MetricsConvertible for ClusterProcessRole {
                 .set(durable_lag.seconds);
         }
 
-        // Latency stats
+        // Roles global latency stats (storage, commit_proxy...)
         self.read_latency_statistics
             .and_set_with_labels(&P_DATA_READ_LATENCY, labels);
         self.commit_latency_statistics
             .and_set_with_labels(&P_DATA_COMMIT_LATENCY, labels);
+
+        // grv_proxy roles latency stats
+        if let Some(default_latencies) = &self.grv_latency_statistics {
+            default_latencies
+                .default
+                .and_set_with_labels(&P_DATA_GRV_PROXY_LATENCY, labels);
+            default_latencies
+                .batch
+                .and_set_with_labels(&P_DATA_GRV_PROXY_BATCHING_LATENCY, labels);
+        }
         self.commit_batching_window_size
             .and_set_with_labels(&P_DATA_COMMIT_BATCHING_WINDOW_SIZE, labels);
 
