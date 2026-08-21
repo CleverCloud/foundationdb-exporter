@@ -60,3 +60,8 @@ impl MetricsConvertible for ClientStatus {
         P_CLIENT_DATABASE_AVAILABLE.set(self.database_status.available as i64);
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_CLIENT_COORDINATOR_REACHABLE.reset();
+}

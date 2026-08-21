@@ -71,3 +71,11 @@ impl MetricsConvertible for ClusterProcess {
         }
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_PROCESS_EXCLUDED.reset();
+    P_PROCESS_CPU_USAGE.reset();
+    P_PROCESS_UPTIME.reset();
+    P_PROCESS_RUN_LOOP_BUSY.reset();
+}
