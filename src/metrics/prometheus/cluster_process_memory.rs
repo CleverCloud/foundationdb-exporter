@@ -68,3 +68,12 @@ impl MetricsConvertible for ClusterProcessMemory {
         }
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_PROCESS_MEMORY_AVAILABLE_BYTES.reset();
+    P_PROCESS_MEMORY_LIMIT_BYTES.reset();
+    P_PROCESS_MEMORY_RSS_BYTES.reset();
+    P_PROCESS_MEMORY_UNUSED_BYTES.reset();
+    P_PROCESS_MEMORY_USED_BYTES.reset();
+}

@@ -91,3 +91,16 @@ impl MetricsConvertible for ClusterProcessDisk {
             .set(self.writes.sectors);
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_PROCESS_DISK_BUSY.reset();
+    P_PROCESS_DISK_FREE_BYTES.reset();
+    P_PROCESS_DISK_TOTAL_BYTES.reset();
+    P_PROCESS_DISK_READS_COUNTER.reset();
+    P_PROCESS_DISK_READS_FREQ.reset();
+    P_PROCESS_DISK_READS_SECTORS.reset();
+    P_PROCESS_DISK_WRITES_COUNTER.reset();
+    P_PROCESS_DISK_WRITES_FREQ.reset();
+    P_PROCESS_DISK_WRITES_SECTORS.reset();
+}

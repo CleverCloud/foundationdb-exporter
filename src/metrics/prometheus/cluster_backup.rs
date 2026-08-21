@@ -133,3 +133,10 @@ impl StaticMetric<IntGaugeVec> for ClusterBackupTag {
         }
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    for metric in P_BACKUP_STATUS_TAG.values() {
+        metric.reset();
+    }
+}

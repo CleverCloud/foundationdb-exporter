@@ -282,3 +282,17 @@ impl MetricsConvertible for ClusterProcessRole {
             .and_set_with_labels(&P_DATA_FREQ_DURABLE_BYTES, labels);
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_KVSTORE_USED_BYTES.reset();
+    P_KVSTORE_AVAILABLE_BYTES.reset();
+    P_KVSTORE_FREE_BYTES.reset();
+    P_QUERY_QUEUE_MAX.reset();
+    P_QUEUE_DISK_USED_BYTES.reset();
+    P_QUEUE_DISK_AVAILABLE_BYTES.reset();
+    P_QUEUE_DISK_FREE_BYTES.reset();
+    P_QUEUE_DISK_TOTAL_BYTES.reset();
+    P_DATA_LAG_SECONDS.reset();
+    P_DATA_DURABLE_LAG_SECONDS.reset();
+}

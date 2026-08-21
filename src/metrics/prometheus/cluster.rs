@@ -86,3 +86,8 @@ impl MetricsConvertible for ClusterStatus {
         }
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_CLUSTER_PROCESS_ROLES_COUNT.reset();
+}

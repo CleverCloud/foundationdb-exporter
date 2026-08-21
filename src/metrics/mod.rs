@@ -11,6 +11,11 @@ pub trait MetricsConvertible {
 
 /// Use the status to update metrics with new status given
 pub fn process_metrics(new_status: Status) {
+    // `status json` is a snapshot: drop label sets from the previous poll so that
+    // processes, machines, coordinators, roles and backup tags which have left the
+    // cluster stop being exported. See [`self::prometheus::reset_dynamic_metrics`].
+    self::prometheus::reset_dynamic_metrics();
+
     let labels = vec![];
     new_status.client.to_metrics(&labels);
     if let Some(cluster) = new_status.cluster {

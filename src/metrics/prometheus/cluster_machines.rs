@@ -87,3 +87,15 @@ impl MetricsConvertible for ClusterMachine {
             .set(self.network.tcp_segments_retransmitted.hz);
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_CLUSTER_MACHINE_EXCLUDED_GAUGE.reset();
+    P_CLUSTER_MACHINE_CONTRIBUTING_WORKERS_GAUGE.reset();
+    P_CLUSTER_MACHINE_MEMORY_COMMITTED_BYTES_GAUGE.reset();
+    P_CLUSTER_MACHINE_MEMORY_FREE_BYTES_GAUGE.reset();
+    P_CLUSTER_MACHINE_MEMORY_TOTAL_BYTES_GAUGE.reset();
+    P_CLUSTER_MACHINE_NETWORK_MEGABITS_RECEIVED_GAUGE.reset();
+    P_CLUSTER_MACHINE_NETWORK_MEGABITS_SENT_GAUGE.reset();
+    P_CLUSTER_MACHINE_NETWORK_TCP_RETRANSMITTED_GAUGE.reset();
+}

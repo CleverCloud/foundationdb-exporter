@@ -57,3 +57,12 @@ impl MetricsConvertible for ClusterProcessNetwork {
             .set(self.megabits_sent.into());
     }
 }
+
+/// Clear this module's dynamically-labelled vectors. See [`super::reset_dynamic_metrics`].
+pub(super) fn reset_dynamic_metrics() {
+    P_PROCESS_NETWORK_CONN_ERRORS.reset();
+    P_PROCESS_NETWORK_CONN_CLOSED.reset();
+    P_PROCESS_NETWORK_CONN_ESTABLISHED.reset();
+    P_PROCESS_NETWORK_MEGABITS_RECEIVED.reset();
+    P_PROCESS_NETWORK_MEGABITS_SENT.reset();
+}

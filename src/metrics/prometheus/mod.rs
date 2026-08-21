@@ -19,6 +19,30 @@ pub mod cluster_process_role;
 pub mod cluster_qos;
 pub mod cluster_wiggle;
 
+/// Clear every metric vector whose label set is derived from cluster state.
+///
+/// `status json` is a point-in-time snapshot, but `MetricVec` is an accumulator:
+/// `with_label_values` creates a child on first use and never drops it. Without
+/// this, a process, machine, coordinator, role or backup tag that disappears from
+/// the cluster keeps being exported at its last observed value indefinitely --
+/// silently inflating `sum()` aggregations and pinning `max()` on values from
+/// something that no longer exists.
+///
+/// Only vectors with dynamic labels are cleared. Scalar gauges are unconditionally
+/// overwritten on every poll, and the `fdb_exporter_*` counters are cumulative by
+/// design, so neither is touched here.
+pub fn reset_dynamic_metrics() {
+    client::reset_dynamic_metrics();
+    cluster::reset_dynamic_metrics();
+    cluster_backup::reset_dynamic_metrics();
+    cluster_machines::reset_dynamic_metrics();
+    cluster_process::reset_dynamic_metrics();
+    cluster_process_disk::reset_dynamic_metrics();
+    cluster_process_memory::reset_dynamic_metrics();
+    cluster_process_network::reset_dynamic_metrics();
+    cluster_process_role::reset_dynamic_metrics();
+}
+
 pub const PROCESS_LABELS: &[&str] = &["machine_id", "process_id", "class_type", "address"];
 
 lazy_static! {
